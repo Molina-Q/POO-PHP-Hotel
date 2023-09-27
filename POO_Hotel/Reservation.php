@@ -79,13 +79,18 @@ class Reservation {
     }
 
     //méthodes
-    public function periodeReservee() {
-        return "du ".$this->debutReservation->format("d-m-Y")." au ".$this->finReservation->format("d-m-Y");
-    }
 
     public function infosChambre() {
 
-        return "Chambre ".$this->chambre->getLibelle()." (".$this->chambre->getNblits()." lits - ".$this->chambre->getPrix()."&euro; - Wifi ".$this->chambre->getWifi().")"; 
+        return "Chambre ".$this->chambre->getLibelle()." (".$this->chambre->getNblits()." lits - ".$this->chambre->getPrix()."&euro; - Wifi : ".$this->chambre->getWifi().")"; 
+    }
+
+    public function annulerReservation() {
+        $returnValue = "<h3> >>>>> ".$this->getClient()." a annulé une réservation à l'hotel ".$this->getHotel()." <<<<< </h3>";
+        $this->client->RemoveReservation($this);
+        $this->hotel->RemoveReservation($this);
+        $this->chambre->RemoveReservation($this);
+        return $returnValue;
     }
 
 }

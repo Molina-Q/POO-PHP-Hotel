@@ -92,8 +92,30 @@ class Chambre {
     //méthode
     public function addReservation(Reservation $reservationObjet)
     {
-        $this->setEtat("Réservée");
+        $this->setEtat("<p class='reserveeHighlight'>Réservée</p>");
         $this->reservations[] = $reservationObjet;
+    }
+
+    public function removeReservation(Reservation $reservationObjet)
+    {
+        $this->setEtat("<p class='disponibleHighlight'>Disponible</p>");
+        $count = 0;
+        foreach($this->reservations as $reservation) {
+            $param1 = $reservation->getChambre();
+            $param2 = $reservationObjet->getChambre();
+
+            if($param1 == $param2) {
+                unset($this->reservations[$count]);
+            }
+            $count++;
+        }
+
+    }
+
+
+    public function dump() 
+    {
+        return var_dump($this->reservations);
     }
 }
 

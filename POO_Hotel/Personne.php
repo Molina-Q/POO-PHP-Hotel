@@ -79,13 +79,27 @@ class Client extends Personne {
         $this->reservations[] = $reservationObjet;
     }
 
+    public function removeReservation(Reservation $reservationObjet)
+    {
+        $count = 0;
+        foreach($this->reservations as $reservation) {
+            $param1 = $reservation->getClient().$reservation->getChambre();
+            $param2 = $reservationObjet->getClient().$reservationObjet->getChambre();
+            if($param1 == $param2) {
+                unset($this->reservations[$count]);
+            }
+            $count++;
+        }
+
+    }
+
     public function countChambresClient()
     {
         $chambresReserve = count($this->reservations);
         return $chambresReserve;
     }
 
-    public function periodeReservee() {
+    public function prixPeriodeReservee() {
         $periodePrix = 0 ;
         foreach($this->reservations as $reservation) {
             $periodeDebut = $reservation->getDebutReservation();
@@ -94,17 +108,21 @@ class Client extends Personne {
             $periodeInt = intval($periodeTotal);
             $periodePrix += $periodeInt * $reservation->getChambre()->getPrix();
         }
-        return "Total : ".$periodePrix." &euro;";
+        return $periodePrix;
     }
 
     public function showReservClient()
     {
-        $returnValue = "<h2>Réservations de ".$this."</h2>";
-        $returnValue .= $this->countChambresClient()." Réservations";
+        $returnValue = "<h3>Réservations de ".$this."</h3>";
+        $returnValue .= "<p class='reservationHighlight'>".$this->countChambresClient()." Réservations</p>";
+        $returnValue .= "<ul>";
         foreach($this->reservations as $reservation) {
-            $returnValue .= "<p>Hotel : ".$reservation->getHotel()." / ".$reservation->infosChambre()." ".$reservation."</p>";
+            $returnValue .= "<li>
+            <p><span class='reservClientHotel'>Hotel : ".$reservation->getHotel()."</span> / ".$reservation->infosChambre()." ".$reservation."</p></li>"
+            ;
         }
-        $returnValue .= "<p>".$this->periodeReservee()."</p>";
+        $returnValue .= "<li><p class='prixReservation'>Total : ".$this->prixPeriodeReservee()." &euro; </p></li>";
+        $returnValue .= "</ul>";
         return $returnValue;
     }
 }

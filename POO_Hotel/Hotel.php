@@ -1,4 +1,5 @@
 <?php
+
 class Hotel {
     private string $nom;
     private string $nbEtoiles;
@@ -77,6 +78,19 @@ class Hotel {
         $this->reservations[] = $reservationObjet;
     }
 
+    public function removeReservation(Reservation $reservationObjet)
+    {
+        $count = 0;
+        foreach($this->reservations as $reservation) {
+            $param1 = $reservation->getHotel().$reservation->getClient().$reservation->getChambre();
+            $param2 = $reservationObjet->getHotel().$reservationObjet->getClient().$reservationObjet->getChambre();
+
+            if($param1 == $param2) {
+                unset($this->reservations[$count]);
+            }
+            $count++;
+        }
+    }
 
     public function countChambres()
     {
@@ -98,10 +112,12 @@ class Hotel {
 
     public function ShowInfosHotel() {
         return "<h2>".$this."</h2>
-        <p>".$this->getAdresse()." ".$this->getVille()."</p>
-        <p>Nombre de chambres : ".$this->countChambres()."</p>
-        <p>Nombre de chambres réservées : ".$this->countChambresReservee()."</p>
-        <p>Nombre de chambres dispo : ".$this->countChambresDispo()."</p>";
+        <ul>
+        <li><p>".$this->getAdresse()." ".$this->getVille()."</p></li>
+        <li><p>Nombre de chambres : ".$this->countChambres()."</p></li>
+        <li><p>Nombre de chambres réservées : ".$this->countChambresReservee()."</p></li>
+        <li><p>Nombre de chambres dispo : ".$this->countChambresDispo()."</p></li>
+        </ul>";
     }
 
     public function showReservationHotel()
@@ -110,13 +126,42 @@ class Hotel {
         if($this->reservations == null) {
             $returnValue .= "<p>Aucune réservation !<p>";
         } else {
-            $returnValue .= "<p>".$this->countChambresReservee()." Réservations </p>";
+            $returnValue .= "<p class='reservationHighlight'>".$this->countChambresReservee()." Réservations</p>";
             foreach ($this->reservations as $reservation) {
-                $returnValue .= "<p>".$reservation->getClient()." - ".$reservation->getChambre()." - ".$reservation."</p>";
+                $returnValue .= "<p><span class='nomClient'>".$reservation->getClient()."</span> - ".$reservation->getChambre()." - ".$reservation."</p>";
             }
         
         }
         return $returnValue ;
+    }
+
+    public function statutsChambres() 
+    { 
+        $returnValue = "<h2>Statuts des chambres de ".$this."</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th> Chambre</th>
+                            <th> Prix</th>
+                            <th> Wifi</th>
+                            <th> Etat</th>
+                        </tr>
+                    </thead>
+                    <tbody> ";
+
+        foreach($this->chambres as $chambre) {
+            $returnValue .= 
+            "<tr>
+                <td>".$chambre."</td>
+                <td>".$chambre->getPrix()."&euro;</td>
+                <td>".$chambre->getWifi()."</td>
+                <td>".$chambre->getEtat()."</td>
+            </tr>";        
+        }
+        $returnValue .=
+                    "</tbody>
+                </table>";
+        return $returnValue;
     }
 }
 
