@@ -158,9 +158,9 @@ class Hotel {
                 <td>".$chambre->getEtat()."</td>
             </tr>";        
         }
-        $returnValue .=
-                    "</tbody>
-                </table>";
+        $returnValue .="</tbody>
+                    </table>"
+
         return $returnValue;
     }
 }
